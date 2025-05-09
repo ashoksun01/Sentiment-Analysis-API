@@ -24,10 +24,16 @@ This project is an end-to-end machine learning API that performs sentiment analy
 
 ## Repository Structure
 
+## Repository Structure
+
 - **`src/`**: Contains the FastAPI application code.
-  - **`main.py`**: FastAPI application code.
-  - **`model.py`**: Model loading and prediction logic.
+  - **`__init__.py`**: Initialization file for the FastAPI application.
+  - **`main.py`**: FastAPI application code for API endpoints.
+- **`trainer/`**: Contains the model training scripts.
+  - **`train.py`**: Script for training the sentiment analysis model.
 - **`tests/`**: Contains test cases for API endpoints using pytest.
+  - **`__init__.py`**: Initialization file for the test suite.
+  - **`test_mlapi.py`**: Test cases for the sentiment analysis API endpoints.
 - **`Dockerfile`**: Configuration for building Docker images.
 - **`pyproject.toml`**: Poetry configuration file for dependency management.
 - **`k8s/`**: Kubernetes deployment configuration files for scalable cloud deployment.
