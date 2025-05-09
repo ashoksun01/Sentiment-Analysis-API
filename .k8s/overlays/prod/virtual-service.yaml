@@ -1,0 +1,39 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ashoksun01-vs
+  namespace: ashoksun01
+spec:
+  gateways:
+    - istio-ingress/ashoksun01-gateway
+  hosts:
+    - ashoksun01.mids255.com
+  http:
+    # Routing for lab4 endpoints
+    - match:
+        - uri:
+            prefix: "/lab4/"
+        - uri:
+            prefix: "/lab4"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: prediction-service
+            port:
+              number: 8000
+    # Routing for project endpoints
+    - match:
+        - uri:
+            prefix: "/project/"
+        - uri:
+            prefix: "/project"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: project-prediction-service
+            port:
+              number: 8000
+

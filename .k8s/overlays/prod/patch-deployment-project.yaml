@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: not-important
+spec:
+  template:
+    spec:
+      containers:
+        - name: project-prediction-container
+          image: w255mids.azurecr.io/ashoksun01/project:926311a_proj
+          resources:
+            requests:
+              cpu: 400m
+              memory: 2700Mi #500 previosuly 
+            limits:
+              cpu: 2300m #500 previously 
+              memory: 3000Mi #500 previously 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: 8000
+            initialDelaySeconds: 1
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
