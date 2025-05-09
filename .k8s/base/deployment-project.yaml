@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-api-deployment
+  namespace: ashoksun01
+  labels:
+    app: project-prediction-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-python-deployment
+  template:
+    metadata:
+      labels:
+        app: project-python-deployment
+    spec:
+      containers:
+        - name: project-prediction-container 
+          image: project:latest 
+          env:
+            - name: REDIS_URL
+              value: redis://redis-service
+            - name: REDIS_PORT
+              value: '6379'
+          resources:
+            requests:
+              cpu: 400m
+              memory: 2700Mi
+            limits:
+              cpu: 2300m
+              memory: 3000Mi
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: 8000
+            initialDelaySeconds: 1
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          startupProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: 8000
+            failureThreshold: 30
+            periodSeconds: 10
+      initContainers:
+        - name: init-verify-redis-service-dns
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -vz redis-service 6379; do echo 'waiting for redis service from DNS'; sleep 2; done",
+            ]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+        - name: init-verify-redis-ready
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until (printf 'PING\r\n';) | nc redis-service 6379; do echo 'waiting for redis to PONG'; sleep 1; done",
+              e,
+            ]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: project
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: project-api-deployment 
+  minReplicas: 1
+  maxReplicas: 40
+  targetCPUUtilizationPercentage: 50
