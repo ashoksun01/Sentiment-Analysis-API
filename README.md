@@ -33,3 +33,11 @@ This project is an end-to-end machine learning API that performs sentiment analy
 - **`k8s/`**: Kubernetes deployment configuration files for scalable cloud deployment.
 
 ---
+
+## Future Improvements
+- **Integrate Advanced Transformer Models:** Enhance the sentiment analysis API by incorporating state-of-the-art pre-trained transformer models (e.g., BERT, RoBERTa) for improved performance and accuracy.
+- **Add Authentication:** Implement secure authentication methods (e.g., OAuth 2.0, API keys) to restrict API access and enhance security.
+- **Feedback Loop for Continuous Improvement:** Develop a feedback mechanism to collect user feedback on sentiment predictions, enabling continuous model retraining and improvement.
+- **Multi-Cloud Deployment:** Expand the deployment capabilities to support multiple cloud platforms, including AWS, GCP, and Azure, for enhanced scalability and redundancy.
+
+---
